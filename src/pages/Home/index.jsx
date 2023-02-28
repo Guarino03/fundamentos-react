@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
 
 import { Card } from '../../componentes/Card';
@@ -7,7 +7,8 @@ import { Card } from '../../componentes/Card';
 export function Home() {
 
   const [studentName, setStudentName] = useState('');
-  const [students, setStudents] = useState([])
+  const [students, setStudents] = useState([]);
+  const [user, setUser] = useState({ name: '', avatar: '' });
 
   function handleAddStudent() {
     const newStudent = {
@@ -24,13 +25,27 @@ export function Home() {
 
   }
 
+  useEffect(() => {
+    //corpo
+    fetch('https://api.github.com/users/Guarino03')
+      .then(response => response.json())
+      .then(data => {
+        setUser({
+          name: data.name,
+          avatar: data.avatar_url,
+        })
+      })
+  }, [
+    //quais são os estados que o useEffect depende
+  ]);
+
   return (
     <div className='box'>
       <header>
         <h1>Lista de Presença</h1>
         <div>
-          <strong>Felipe Alves Guarino</strong>
-          <img src="https://media.licdn.com/dms/image/D4D03AQGx_kwbF_fo_w/profile-displayphoto-shrink_800_800/0/1673968777653?e=1682553600&v=beta&t=SfE0QbxEFvuiSp0Q0jB3xjZ6leItGBGYz2Ej9rtefLA" alt="Perfil" />
+          <strong>{user.name}</strong>
+          <img src={user.avatar} alt="Perfil" />
         </div>
       </header>
       <input
